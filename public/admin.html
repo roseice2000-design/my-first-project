@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理面板 - 房源预订网站</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+      color: #333;
+      background-color: #f9f9f9;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      font-size: 2rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-left: 4px solid #667eea;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #667eea;
+    }
+
+    .stat-label {
+      color: #666;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    thead {
+      background: #f0f0f0;
+      border-bottom: 2px solid #ddd;
+    }
+
+    th {
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: #333;
+    }
+
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    tr:hover {
+      background: #f9f9f9;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .status-confirmed {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-cancelled {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .btn-small {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+    }
+
+    .section {
+      margin-bottom: 3rem;
+    }
+
+    .section h2 {
+      margin-bottom: 1.5rem;
+      color: #333;
+      font-size: 1.5rem;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: #999;
+    }
+
+    .filter-bar {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .filter-controls {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    select, input {
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: inherit;
+    }
+
+    .footer {
+      text-align: center;
+      color: #999;
+      margin-top: 3rem;
+      padding: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .filter-controls {
+        flex-direction: column;
+      }
+
+      table {
+        font-size: 0.9rem;
+      }
+
+      th, td {
+        padding: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📊 房源管理面板</h1>
+    <p>管理您的预订和房源信息</p>
+  </header>
+
+  <div class="container">
+    <!-- 统计信息 -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number" id="totalBookings">0</div>
+        <div class="stat-label">总预订数</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="totalRevenue">￥0</div>
+        <div class="stat-label">总收入</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="confirmedBookings">0</div>
+        <div class="stat-label">已确认预订</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="averageRating">0</div>
+        <div class="stat-label">平均评分</div>
+      </div>
+    </div>
+
+    <!-- 预订列表 -->
+    <div class="section">
+      <h2>📅 最近预订</h2>
+
+      <div class="filter-bar">
+        <div class="filter-controls">
+          <select id="statusFilter">
+            <option value="">全部状态</option>
+            <option value="confirmed">已确认</option>
+            <option value="pending">待处理</option>
+            <option value="cancelled">已取消</option>
+          </select>
+          <input type="date" id="dateFilter" placeholder="按日期过滤">
+          <button onclick="loadBookings()">刷新</button>
+        </div>
+      </div>
+
+      <div id="bookingsList" class="loading">加载中...</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>&copy; 2026 房源预订网站管理面板</p>
+  </div>
+
+  <script>
+    // 初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      loadBookings();
+    });
+
+    // 加载预订列表
+    async function loadBookings() {
+      try {
+        const response = await fetch('/api/bookings');
+        const bookings = await response.json();
+
+        // 应用过滤器
+        let filtered = bookings;
+
+        const statusFilter = document.getElementById('statusFilter').value;
+        if (statusFilter) {
+          filtered = filtered.filter(b => b.status === statusFilter);
+        }
+
+        const dateFilter = document.getElementById('dateFilter').value;
+        if (dateFilter) {
+          filtered = filtered.filter(b => b.checkIn.startsWith(dateFilter));
+        }
+
+        // 更新统计
+        updateStats(bookings);
+
+        // 显示预订表格
+        displayBookings(filtered);
+      } catch (error) {
+        console.error('加载预订失败:', error);
+        document.getElementById('bookingsList').innerHTML = '<p style="text-align: center; color: #999;">加载失败</p>';
+      }
+    }
+
+    // 更新统计信息
+    function updateStats(bookings) {
+      const totalBookings = bookings.length;
+      const totalRevenue = bookings.reduce((sum, b) => sum + (b.totalPrice || 0), 0);
+      const confirmedBookings = bookings.filter(b => b.status === 'confirmed').length;
+
+      document.getElementById('totalBookings').textContent = totalBookings;
+      document.getElementById('totalRevenue').textContent = `￥${totalRevenue.toFixed(2)}`;
+      document.getElementById('confirmedBookings').textContent = confirmedBookings;
+      document.getElementById('averageRating').textContent = '4.8'; // 示例数据
+    }
+
+    // 显示预订表格
+    function displayBookings(bookings) {
+      const list = document.getElementById('bookingsList');
+
+      if (bookings.length === 0) {
+        list.innerHTML = '<p style="text-align: center; color: #999;">暂无预订</p>';
+        return;
+      }
+
+      const html = `
+        <table>
+          <thead>
+            <tr>
+              <th>预订编号</th>
+              <th>房源名称</th>
+              <th>客人姓名</th>
+              <th>入住日期</th>
+              <th>退房日期</th>
+              <th>人数</th>
+              <th>总价</th>
+              <th>状态</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${bookings.map(b => `
+              <tr>
+                <td><code>${b.confirmationCode}</code></td>
+                <td>${b.propertyName}</td>
+                <td>${b.fullName}</td>
+                <td>${new Date(b.checkIn).toLocaleDateString('zh-CN')}</td>
+                <td>${new Date(b.checkOut).toLocaleDateString('zh-CN')}</td>
+                <td>${b.guests}</td>
+                <td>￥${b.totalPrice.toFixed(2)}</td>
+                <td>
+                  <span class="status-badge status-${b.status}">
+                    ${b.status === 'confirmed' ? '✓ 已确认' : b.status === 'pending' ? '⏳ 待处理' : '✕ 已取消'}
+                  </span>
+                </td>
+                <td>
+                  <button class="btn-small" onclick="viewBooking('${b.id}')">查看</button>
+                  <button class="btn-small btn-danger" onclick="cancelBooking('${b.id}')">取消</button>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+
+      list.innerHTML = html;
+    }
+
+    // 查看预订详情
+    function viewBooking(id) {
+      alert('查看详情: ' + id + '\n\n完整功能将在后续版本中实现');
+    }
+
+    // 取消预订
+    async function cancelBooking(id) {
+      if (!confirm('确认要取消这个预订吗？')) return;
+
+      try {
+        const response = await fetch(`/api/bookings/${id}`, {
+          method: 'DELETE'
+        });
+
+        if (response.ok) {
+          alert('预订已取消');
+          loadBookings();
+        } else {
+          alert('取消失败');
+        }
+      } catch (error) {
+        console.error('取消失败:', error);
+        alert('取消失败，请重试');
+      }
+    }
+
+    // 过滤器变更时重新加载
+    document.getElementById('statusFilter').addEventListener('change', loadBookings);
+    document.getElementById('dateFilter').addEventListener('change', loadBookings);
+  </script>
+</body>
+</html>
