@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>导入房源 - Airbnb房源管理</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      color: #333;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      color: white;
+      margin-bottom: 3rem;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 0.75rem;
+      background: #f0f0f0;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .content {
+      background: white;
+      border-radius: 8px;
+      padding: 2rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      margin-bottom: 2rem;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .form-section {
+      margin-bottom: 2rem;
+    }
+
+    .form-section h3 {
+      margin-bottom: 1rem;
+      color: #333;
+      font-size: 1.2rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    input, textarea, select {
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 1rem;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+      grid-column: 1 / -1;
+    }
+
+    .hint {
+      font-size: 0.85rem;
+      color: #999;
+      margin-top: 0.3rem;
+    }
+
+    .amenities-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .amenity-tag {
+      background: #f0f0f0;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .amenity-tag button {
+      background: none;
+      border: none;
+      color: #999;
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 0;
+    }
+
+    .amenity-input-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .amenity-input-group input {
+      flex: 1;
+    }
+
+    .amenity-input-group button {
+      padding: 0.75rem 1rem;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+      font-size: 1rem;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      grid-column: 1 / -1;
+      margin-top: 1rem;
+    }
+
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .success-message, .error-message {
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .error-message {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .success-message.show, .error-message.show {
+      display: block;
+    }
+
+    .properties-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .properties-table thead {
+      background: #f0f0f0;
+    }
+
+    .properties-table th {
+      padding: 0.75rem;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .properties-table td {
+      padding: 0.75rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .properties-table tr:hover {
+      background: #f9f9f9;
+    }
+
+    .btn-delete {
+      background: #f5576c;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+    }
+
+    .instruction-box {
+      background: #f0f7ff;
+      border-left: 4px solid #667eea;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 2rem;
+    }
+
+    .instruction-box h4 {
+      color: #667eea;
+      margin-bottom: 0.5rem;
+    }
+
+    .instruction-box ol {
+      margin-left: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .instruction-box li {
+      margin-bottom: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      .tabs {
+        flex-direction: column;
+      }
+
+      .content {
+        padding: 1rem;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🏠 房源导入工具</h1>
+      <p>从Airbnb导入您的房源信息</p>
+    </header>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('add')">➕ 添加房源</button>
+      <button class="tab-btn" onclick="switchTab('manage')">📋 管理房源</button>
+      <button class="tab-btn" onclick="switchTab('guide')">📖 使用指南</button>
+    </div>
+
+    <!-- 添加房源 -->
+    <div id="add" class="tab-content active">
+      <div class="content">
+        <div class="instruction-box">
+          <h4>📝 如何快速导入：</h4>
+          <ol>
+            <li>在Airbnb上打开您的房源页面</li>
+            <li>复制房源URL或ID（房间号）</li>
+            <li>在下方表单填写基本信息</li>
+            <li>点击"保存房源"即可添加</li>
+          </ol>
+        </div>
+
+        <div id="addMessage"></div>
+
+        <form id="propertyForm" onsubmit="addProperty(event)">
+          <!-- 基本信息 -->
+          <div class="form-section">
+            <h3>📍 基本信息</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="name">房源名称 *</label>
+                <input type="text" id="name" required placeholder="如：温馨一卧室公寓">
+                <div class="hint">从Airbnb复制标题</div>
+              </div>
+
+              <div class="form-group">
+                <label for="location">位置 *</label>
+                <input type="text" id="location" required placeholder="如：市中心、浦东新区">
+              </div>
+
+              <div class="form-group">
+                <label for="airbnbUrl">Airbnb房源URL（可选）</label>
+                <input type="url" id="airbnbUrl" placeholder="https://zh.airbnb.com/rooms/...">
+                <div class="hint">用于链接回Airbnb</div>
+              </div>
+
+              <div class="form-group">
+                <label for="description">房源描述 *</label>
+                <textarea id="description" required placeholder="详细描述您的房源..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- 房间信息 -->
+          <div class="form-section">
+            <h3>🛏️ 房间配置</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="bedrooms">卧室数 *</label>
+                <input type="number" id="bedrooms" required min="1" placeholder="1">
+              </div>
+
+              <div class="form-group">
+                <label for="bathrooms">浴室数 *</label>
+                <input type="number" id="bathrooms" required min="1" placeholder="1">
+              </div>
+
+              <div class="form-group">
+                <label for="guests">最多容纳人数 *</label>
+                <input type="number" id="guests" required min="1" placeholder="2">
+              </div>
+
+              <div class="form-group">
+                <label for="bedType">床型</label>
+                <input type="text" id="bedType" placeholder="如：1张大床、2张单床">
+              </div>
+            </div>
+          </div>
+
+          <!-- 价格信息 -->
+          <div class="form-section">
+            <h3>💰 价格信息</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="pricePerNight">每晚价格（CNY） *</label>
+                <input type="number" id="pricePerNight" required min="0" placeholder="120">
+              </div>
+
+              <div class="form-group">
+                <label for="cleaningFee">清洁费（可选）</label>
+                <input type="number" id="cleaningFee" min="0" placeholder="0">
+              </div>
+
+              <div class="form-group">
+                <label for="weeklyDiscount">周订优惠（%）</label>
+                <input type="number" id="weeklyDiscount" min="0" max="100" placeholder="10">
+                <div class="hint">7天及以上享受的折扣百分比</div>
+              </div>
+
+              <div class="form-group">
+                <label for="monthlyDiscount">月订优惠（%）</label>
+                <input type="number" id="monthlyDiscount" min="0" max="100" placeholder="20">
+              </div>
+            </div>
+          </div>
+
+          <!-- 可用性 -->
+          <div class="form-section">
+            <h3>📅 可用性</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="availableFrom">可入住日期 *</label>
+                <input type="date" id="availableFrom" required>
+              </div>
+
+              <div class="form-group">
+                <label for="availableTo">最晚退房日期 *</label>
+                <input type="date" id="availableTo" required>
+              </div>
+
+              <div class="form-group">
+                <label for="minNights">最少预订晚数</label>
+                <input type="number" id="minNights" min="1" placeholder="1">
+              </div>
+
+              <div class="form-group">
+                <label for="maxNights">最多预订晚数（可选）</label>
+                <input type="number" id="maxNights" min="1" placeholder="无限制">
+              </div>
+            </div>
+          </div>
+
+          <!-- 评分 -->
+          <div class="form-section">
+            <h3>⭐ 评分和评价</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="rating">评分</label>
+                <input type="number" id="rating" min="0" max="5" step="0.1" placeholder="4.8">
+              </div>
+
+              <div class="form-group">
+                <label for="reviews">评价数</label>
+                <input type="number" id="reviews" min="0" placeholder="125">
+              </div>
+            </div>
+          </div>
+
+          <!-- 设施 -->
+          <div class="form-section">
+            <h3>✨ 设施和便利</h3>
+            <div class="form-group">
+              <label>添加设施</label>
+              <div class="amenity-input-group">
+                <input type="text" id="amenityInput" placeholder="如：WiFi、空调、厨房、停车场">
+                <button type="button" onclick="addAmenity()">添加</button>
+              </div>
+              <div class="amenities-list" id="amenitiesList"></div>
+              <div class="hint">常见设施：WiFi、空调、厨房、停车场、电视、洗衣机、热水、门禁卡</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="btn-group">
+              <button type="submit">💾 保存房源</button>
+              <button type="reset" class="btn-secondary">🔄 清空表单</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 管理房源 -->
+    <div id="manage" class="tab-content">
+      <div class="content">
+        <h2 style="margin-bottom: 1.5rem;">📋 已添加的房源</h2>
+        <div id="manageMessage"></div>
+        <div id="propertiesList" style="overflow-x: auto;"></div>
+      </div>
+    </div>
+
+    <!-- 使用指南 -->
+    <div id="guide" class="tab-content">
+      <div class="content">
+        <h2 style="margin-bottom: 1.5rem;">📖 使用指南</h2>
+
+        <div class="instruction-box">
+          <h4>🎯 导入步骤</h4>
+          <ol>
+            <li><strong>获取房源信息</strong>：打开您的Airbnb房源页面</li>
+            <li><strong>填写表单</strong>：复制关键信息到表单中
+              <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                <li>标题、位置、描述</li>
+                <li>房间配置（卧室、浴室、人数）</li>
+                <li>价格和折扣</li>
+                <li>可用日期范围</li>
+                <li>评分和设施</li>
+              </ul>
+            </li>
+            <li><strong>保存房源</strong>：点击"保存房源"按钮</li>
+            <li><strong>查看效果</strong>：访问主网站查看房源展示</li>
+          </ol>
+        </div>
+
+        <div class="instruction-box">
+          <h4>💡 小贴士</h4>
+          <ul style="margin-left: 1.5rem; line-height: 1.8;">
+            <li>设施越详细，客人越容易预订</li>
+            <li>提供准确的价格和可用日期</li>
+            <li>好的描述能增加预订转化率</li>
+            <li>可以添加多个房源</li>
+            <li>设施可随时修改</li>
+          </ul>
+        </div>
+
+        <div class="instruction-box">
+          <h4>🔗 与Airbnb的区别</h4>
+          <ul style="margin-left: 1.5rem; line-height: 1.8;">
+            <li><strong>优势</strong>：无中介费、直接与客人沟通、更高利润</li>
+            <li><strong>建议</strong>：在Airbnb和自己网站同时运营，扩大客源</li>
+            <li><strong>分析</strong>：对比两个平台的预订率优化策略</li>
+          </ul>
+        </div>
+
+        <div class="instruction-box">
+          <h4>🚀 进阶功能（后续开发）</h4>
+          <ul style="margin-left: 1.5rem; line-height: 1.8;">
+            <li>自动同步Airbnb日历</li>
+            <li>自动导入Airbnb评价</li>
+            <li>多房源批量管理</li>
+            <li>收入统计和分析</li>
+            <li>支付和结算管理</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let amenities = [];
+    let properties = [];
+
+    // 初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      loadProperties();
+      setDefaultDates();
+    });
+
+    // 设置默认日期
+    function setDefaultDates() {
+      const today = new Date();
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
+      const endDate = new Date(today);
+      endDate.setMonth(endDate.getMonth() + 3);
+
+      document.getElementById('availableFrom').valueAsDate = today;
+      document.getElementById('availableTo').valueAsDate = endDate;
+    }
+
+    // 切换标签页
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+      document.getElementById(tabName).classList.add('active');
+      event.target.classList.add('active');
+
+      if (tabName === 'manage') {
+        loadProperties();
+      }
+    }
+
+    // 添加设施
+    function addAmenity() {
+      const input = document.getElementById('amenityInput');
+      const value = input.value.trim();
+
+      if (!value) {
+        alert('请输入设施名称');
+        return;
+      }
+
+      if (!amenities.includes(value)) {
+        amenities.push(value);
+        displayAmenities();
+        input.value = '';
+      }
+    }
+
+    // 显示设施
+    function displayAmenities() {
+      const list = document.getElementById('amenitiesList');
+      list.innerHTML = amenities.map(a => `
+        <div class="amenity-tag">
+          ${a}
+          <button type="button" onclick="removeAmenity('${a}')">✕</button>
+        </div>
+      `).join('');
+    }
+
+    // 删除设施
+    function removeAmenity(amenity) {
+      amenities = amenities.filter(a => a !== amenity);
+      displayAmenities();
+    }
+
+    // 添加房源
+    async function addProperty(event) {
+      event.preventDefault();
+
+      const property = {
+        id: Date.now().toString(),
+        name: document.getElementById('name').value,
+        location: document.getElementById('location').value,
+        description: document.getElementById('description').value,
+        bedrooms: parseInt(document.getElementById('bedrooms').value),
+        bathrooms: parseInt(document.getElementById('bathrooms').value),
+        guests: parseInt(document.getElementById('guests').value),
+        bedType: document.getElementById('bedType').value || '标准床位',
+        pricePerNight: parseFloat(document.getElementById('pricePerNight').value),
+        cleaningFee: parseFloat(document.getElementById('cleaningFee').value) || 0,
+        weeklyDiscount: parseFloat(document.getElementById('weeklyDiscount').value) || 0,
+        monthlyDiscount: parseFloat(document.getElementById('monthlyDiscount').value) || 0,
+        availableDates: {
+          from: document.getElementById('availableFrom').value,
+          to: document.getElementById('availableTo').value
+        },
+        minNights: parseInt(document.getElementById('minNights').value) || 1,
+        maxNights: parseInt(document.getElementById('maxNights').value) || null,
+        rating: parseFloat(document.getElementById('rating').value) || 4.5,
+        reviews: parseInt(document.getElementById('reviews').value) || 0,
+        amenities: [...amenities],
+        airbnbUrl: document.getElementById('airbnbUrl').value || null,
+        currency: 'CNY'
+      };
+
+      try {
+        // 发送到服务器保存
+        const response = await fetch('/api/properties', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(property)
+        });
+
+        if (response.ok) {
+          showMessage('addMessage', `✅ 房源"${property.name}"已成功添加！`, 'success');
+          document.getElementById('propertyForm').reset();
+          amenities = [];
+          displayAmenities();
+          setDefaultDates();
+          loadProperties();
+        } else {
+          const error = await response.json();
+          showMessage('addMessage', `❌ ${error.error || '保存失败'}`, 'error');
+        }
+
+      } catch (error) {
+        showMessage('addMessage', '❌ 保存失败，请重试', 'error');
+        console.error(error);
+      }
+    }
+
+    // 加载房源
+    async function loadProperties() {
+      try {
+        const response = await fetch('/api/properties');
+        properties = await response.json();
+
+        const list = document.getElementById('propertiesList');
+
+        if (properties.length === 0) {
+          list.innerHTML = '<p style="text-align: center; color: #999;">还没有添加房源</p>';
+          return;
+        }
+
+        const html = `
+          <table class="properties-table">
+            <thead>
+              <tr>
+                <th>房源名称</th>
+                <th>位置</th>
+                <th>卧室</th>
+                <th>每晚价格</th>
+                <th>评分</th>
+                <th>可用期限</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${properties.map(p => `
+                <tr>
+                  <td><strong>${p.name}</strong></td>
+                  <td>${p.location}</td>
+                  <td>${p.bedrooms}卧${p.bathrooms}浴</td>
+                  <td>￥${p.pricePerNight}</td>
+                  <td>${p.rating ? '⭐ ' + p.rating : '未评分'}</td>
+                  <td>${p.availableDates.from} 到 ${p.availableDates.to}</td>
+                  <td>
+                    <button class="btn-delete" onclick="deleteProperty('${p.id}')">删除</button>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+
+        list.innerHTML = html;
+      } catch (error) {
+        console.error('加载房源失败:', error);
+        document.getElementById('propertiesList').innerHTML = '<p style="text-align: center; color: #999;">加载失败</p>';
+      }
+    }
+
+    // 删除房源
+    async function deleteProperty(id) {
+      if (!confirm('确认删除此房源？')) return;
+
+      try {
+        const response = await fetch(`/api/properties/${id}`, {
+          method: 'DELETE'
+        });
+
+        if (response.ok) {
+          loadProperties();
+        } else {
+          alert('删除失败');
+        }
+      } catch (error) {
+        console.error('删除失败:', error);
+        alert('删除失败，请重试');
+      }
+    }
+
+    // 显示消息
+    function showMessage(elementId, message, type) {
+      const el = document.getElementById(elementId);
+      el.textContent = message;
+      el.className = `${type}-message show`;
+      setTimeout(() => el.classList.remove('show'), 3000);
+    }
+
+    // 按Enter添加设施
+    document.addEventListener('keypress', (e) => {
+      if (e.target.id === 'amenityInput' && e.key === 'Enter') {
+        e.preventDefault();
+        addAmenity();
+      }
+    });
+  </script>
+</body>
+</html>
