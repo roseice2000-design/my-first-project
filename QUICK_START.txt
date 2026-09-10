@@ -1,0 +1,68 @@
+════════════════════════════════════════════════════════════
+  🏠 PROPERTY BOOKING WEBSITE - QUICK START GUIDE
+════════════════════════════════════════════════════════════
+
+📍 YOUR PROPERTY:
+  Modern Drouin Family Home | Long Stays Welcome
+  Location: Drouin, Victoria, Australia
+  Price: $400 AUD/night | $750 AUD peak season
+  Config: 3 Beds, 2 Baths, 6 Guests, Min 3 nights
+
+════════════════════════════════════════════════════════════
+🚀 DEPLOY IN 5 MINUTES
+════════════════════════════════════════════════════════════
+
+1. Visit: https://railway.app
+2. Click: "New Project" → "Deploy from GitHub"
+3. Select: roseice2000-design/my-first-project
+4. Branch: claude/property-booking-website-vjgko5
+5. Wait: 2-3 minutes for deployment ✅
+
+🎉 Your live URL appears in Railway dashboard!
+
+════════════════════════════════════════════════════════════
+📱 AFTER DEPLOYMENT
+════════════════════════════════════════════════════════════
+
+Main Site:    https://your-app.railway.app/
+Import Tool:  https://your-app.railway.app/import.html
+Admin Panel:  https://your-app.railway.app/admin.html
+
+Share main URL with guests for bookings!
+
+════════════════════════════════════════════════════════════
+✅ TEST CHECKLIST
+════════════════════════════════════════════════════════════
+
+[ ] Site loads
+[ ] Property displays
+[ ] Booking form works
+[ ] Price calculates
+[ ] Confirmation appears
+[ ] Admin panel accessible
+[ ] All working? ✨ READY TO SHARE!
+
+════════════════════════════════════════════════════════════
+💡 FEATURES
+════════════════════════════════════════════════════════════
+
+✅ Direct booking (no middle-man fees)
+✅ Real-time price calculation
+✅ Confirmation codes
+✅ Admin booking management
+✅ Add more properties anytime
+✅ Mobile responsive
+✅ English interface
+
+════════════════════════════════════════════════════════════
+📞 DOCUMENTATION
+════════════════════════════════════════════════════════════
+
+Full guides in project root:
+  • RAILWAY_DEPLOY.md  - Complete deployment steps
+  • DEPLOY.md          - All deployment options
+  • README.md          - Full documentation
+
+════════════════════════════════════════════════════════════
+
+Ready? Go to https://railway.app and deploy! 🚀
