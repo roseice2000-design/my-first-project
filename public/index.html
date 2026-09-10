@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>房源预订 - 直接预订最优价格</title>
+  <title>Property Booking - Direct Booking, Best Prices</title>
   <style>
     * {
       margin: 0;
@@ -340,84 +340,85 @@
 </head>
 <body>
   <header>
-    <h1>🏠 房源预订网站</h1>
-    <p>直接预订，优惠价格，无中介费用</p>
+    <h1>🏠 Property Booking</h1>
+    <p>Direct Booking • Best Prices • No Commission Fees</p>
   </header>
 
   <nav>
     <ul>
-      <li><a onclick="showSection('properties')">房源</a></li>
-      <li><a onclick="showSection('bookings')">我的预订</a></li>
-      <li><a href="/import.html" target="_blank">📥 导入房源</a></li>
-      <li><a href="/admin.html" target="_blank">📊 管理面板</a></li>
-      <li><a onclick="showSection('about')">关于</a></li>
+      <li><a onclick="showSection('properties')">Properties</a></li>
+      <li><a onclick="showSection('bookings')">My Bookings</a></li>
+      <li><a href="/import.html" target="_blank">📥 Import</a></li>
+      <li><a href="/admin.html" target="_blank">📊 Admin</a></li>
+      <li><a onclick="showSection('about')">About</a></li>
     </ul>
   </nav>
 
   <div class="container">
-    <!-- 房源列表 -->
+    <!-- Properties List -->
     <div id="properties" class="section active">
       <div class="search-section">
-        <h2>搜索房源</h2>
+        <h2>Search Properties</h2>
         <div class="search-grid">
           <div class="form-group">
-            <label>入住日期</label>
+            <label>Check-in Date</label>
             <input type="date" id="searchCheckIn">
           </div>
           <div class="form-group">
-            <label>退房日期</label>
+            <label>Check-out Date</label>
             <input type="date" id="searchCheckOut">
           </div>
           <div class="form-group">
-            <label>人数</label>
+            <label>Guests</label>
             <select id="searchGuests">
-              <option value="">任意</option>
-              <option value="1">1人</option>
-              <option value="2">2人</option>
-              <option value="3">3人</option>
-              <option value="4">4人</option>
+              <option value="">Any</option>
+              <option value="1">1 Guest</option>
+              <option value="2">2 Guests</option>
+              <option value="3">3 Guests</option>
+              <option value="4">4 Guests</option>
+              <option value="6">6+ Guests</option>
             </select>
           </div>
-          <button onclick="filterProperties()">搜索</button>
+          <button onclick="filterProperties()">Search</button>
         </div>
       </div>
 
       <div id="propertiesList" class="properties-grid"></div>
     </div>
 
-    <!-- 我的预订 -->
+    <!-- My Bookings -->
     <div id="bookings" class="section">
-      <h2>我的预订</h2>
-      <input type="text" id="bookingCode" placeholder="输入预订编号查询..." style="width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 6px;">
-      <button onclick="searchBooking()">查询预订</button>
+      <h2>My Bookings</h2>
+      <input type="text" id="bookingCode" placeholder="Enter confirmation code..." style="width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 6px;">
+      <button onclick="searchBooking()">Search Booking</button>
       <div id="bookingResult" style="margin-top: 2rem;"></div>
     </div>
 
-    <!-- 关于 -->
+    <!-- About -->
     <div id="about" class="section">
-      <h2>关于我们</h2>
+      <h2>About Us</h2>
       <p style="margin-top: 1rem; line-height: 1.6;">
-        欢迎来到我们的房源预订网站！我们提供最优惠的价格和最好的服务。通过直接预订，您可以：
+        Welcome to our property booking platform! We offer the best prices and exceptional service. By booking directly, you can:
       </p>
       <ul style="margin-top: 1rem; margin-left: 2rem; line-height: 1.8;">
-        <li>获得最优价格 - 无中介费用</li>
-        <li>直接与房东沟通</li>
-        <li>安全可靠的预订系统</li>
-        <li>24小时客户支持</li>
+        <li>Get the best rates - no commission fees</li>
+        <li>Communicate directly with property owners</li>
+        <li>Safe and secure booking system</li>
+        <li>24/7 customer support</li>
       </ul>
       <p style="margin-top: 2rem;">
-        <strong>联系我们：</strong><br>
-        邮箱：booking@property.com<br>
-        电话：+86 123 4567 8900
+        <strong>Contact Us:</strong><br>
+        Email: booking@property.com<br>
+        Phone: +61 123 4567 8900
       </p>
     </div>
   </div>
 
-  <!-- 预订模态框 -->
+  <!-- Booking Modal -->
   <div id="bookingModal" class="booking-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>预订房源</h2>
+        <h2>Book Property</h2>
         <button class="close-btn" onclick="closeBookingModal()">✕</button>
       </div>
 
@@ -427,71 +428,68 @@
         <input type="hidden" id="propertyId">
 
         <div class="form-group">
-          <label>入住日期</label>
+          <label>Check-in Date *</label>
           <input type="date" id="checkIn" required>
         </div>
 
         <div class="form-group">
-          <label>退房日期</label>
+          <label>Check-out Date *</label>
           <input type="date" id="checkOut" required>
         </div>
 
         <div class="form-group">
-          <label>人数</label>
+          <label>Number of Guests *</label>
           <select id="guests" required>
-            <option value="">请选择</option>
-            <option value="1">1人</option>
-            <option value="2">2人</option>
-            <option value="3">3人</option>
-            <option value="4">4人</option>
-            <option value="5">5人或以上</option>
+            <option value="">Please select</option>
+            <option value="1">1 Guest</option>
+            <option value="2">2 Guests</option>
+            <option value="3">3 Guests</option>
+            <option value="4">4 Guests</option>
+            <option value="6">6 Guests</option>
           </select>
         </div>
 
         <div class="price-summary" id="priceSummary" style="display:none;">
           <div class="price-line">
-            <span id="summaryNights">0晚 × ￥</span>
-            <span id="summaryNightPrice">0/晚</span>
+            <span id="summaryNights">0 nights × $</span>
+            <span id="summaryNightPrice">0/night</span>
           </div>
           <div class="price-line price-total">
-            <span>总价</span>
-            <span id="summaryTotal">￥0</span>
+            <span>Total Price</span>
+            <span id="summaryTotal">$0</span>
           </div>
         </div>
 
         <div class="form-group">
-          <label>姓名</label>
-          <input type="text" id="fullName" required placeholder="请输入您的姓名">
+          <label>Full Name *</label>
+          <input type="text" id="fullName" required placeholder="Enter your full name">
         </div>
 
         <div class="form-group">
-          <label>邮箱</label>
-          <input type="email" id="email" required placeholder="请输入您的邮箱">
+          <label>Email *</label>
+          <input type="email" id="email" required placeholder="Enter your email">
         </div>
 
         <div class="form-group">
-          <label>电话</label>
-          <input type="tel" id="phone" placeholder="请输入您的电话号码">
+          <label>Phone Number</label>
+          <input type="tel" id="phone" placeholder="Enter your phone number">
         </div>
 
-        <button type="submit" style="width: 100%;">确认预订</button>
+        <button type="submit" style="width: 100%;">Confirm Booking</button>
       </form>
     </div>
   </div>
 
   <footer class="footer">
-    <p>&copy; 2026 房源预订网站。保留所有权利。</p>
+    <p>&copy; 2026 Property Booking. All rights reserved.</p>
   </footer>
 
   <script>
     let properties = [];
     let currentProperty = null;
 
-    // 初始化
     document.addEventListener('DOMContentLoaded', async () => {
       await loadProperties();
-
-      // 设置日期选择器的最小日期为今天
       const today = new Date().toISOString().split('T')[0];
       document.getElementById('checkIn').min = today;
       document.getElementById('checkOut').min = today;
@@ -499,48 +497,45 @@
       document.getElementById('searchCheckOut').min = today;
     });
 
-    // 加载房源列表
     async function loadProperties() {
       try {
         const response = await fetch('/api/properties');
         properties = await response.json();
         displayProperties(properties);
       } catch (error) {
-        console.error('加载房源失败:', error);
+        console.error('Failed to load properties:', error);
       }
     }
 
-    // 显示房源
     function displayProperties(propertiesToShow) {
       const list = document.getElementById('propertiesList');
       list.innerHTML = propertiesToShow.map(property => `
         <div class="property-card" onclick="openBookingModal('${property.id}')">
           <div class="property-image">
-            ${property.bedrooms}🛏️
+            🏡
           </div>
           <div class="property-info">
             <div class="property-name">${property.name}</div>
             <div class="property-location">📍 ${property.location}</div>
             <div class="property-details">
-              <span>${property.bedrooms}卧室</span>
-              <span>${property.bathrooms}浴室</span>
-              <span>最多${property.guests}人</span>
+              <span>${property.bedrooms} Beds</span>
+              <span>${property.bathrooms} Baths</span>
+              <span>Max ${property.guests} Guests</span>
             </div>
-            ${property.rating ? `<div class="property-rating">⭐ ${property.rating} (${property.reviews}条评价)</div>` : ''}
+            ${property.rating ? `<div class="property-rating">⭐ ${property.rating} (${property.reviews} reviews)</div>` : ''}
             <div class="property-amenities">
               ${property.amenities.slice(0, 3).map(a => `<span class="amenity">${a}</span>`).join('')}
             </div>
             <div class="property-price">
-              ￥${property.pricePerNight}
-              <div class="price-subtitle">/晚</div>
+              $${property.pricePerNight}
+              <div class="price-subtitle">/night</div>
             </div>
-            <button>查看详情 &rarr;</button>
+            <button>View Details →</button>
           </div>
         </div>
       `).join('');
     }
 
-    // 过滤房源
     function filterProperties() {
       const checkIn = document.getElementById('searchCheckIn').value;
       const checkOut = document.getElementById('searchCheckOut').value;
@@ -553,7 +548,7 @@
         const outDate = new Date(checkOut);
 
         if (inDate >= outDate) {
-          alert('退房日期必须在入住日期之后');
+          alert('Check-out date must be after check-in date');
           return;
         }
 
@@ -571,7 +566,6 @@
       displayProperties(filtered);
     }
 
-    // 打开预订模态框
     function openBookingModal(propertyId) {
       currentProperty = properties.find(p => p.id === propertyId);
       if (!currentProperty) return;
@@ -582,20 +576,17 @@
       document.getElementById('priceSummary').style.display = 'none';
       document.getElementById('bookingModal').classList.add('active');
 
-      // 设置日期范围
       document.getElementById('checkIn').min = currentProperty.availableDates.from;
       document.getElementById('checkIn').max = currentProperty.availableDates.to;
       document.getElementById('checkOut').min = currentProperty.availableDates.from;
       document.getElementById('checkOut').max = currentProperty.availableDates.to;
     }
 
-    // 关闭模态框
     function closeBookingModal() {
       document.getElementById('bookingModal').classList.remove('active');
       currentProperty = null;
     }
 
-    // 计算价格
     function updatePrice() {
       const checkIn = document.getElementById('checkIn').value;
       const checkOut = document.getElementById('checkOut').value;
@@ -609,20 +600,18 @@
       if (nights > 0) {
         const total = nights * currentProperty.pricePerNight;
         document.getElementById('priceSummary').style.display = 'block';
-        document.getElementById('summaryNights').textContent = `${nights}晚 × ￥`;
-        document.getElementById('summaryNightPrice').textContent = `${currentProperty.pricePerNight}/晚`;
-        document.getElementById('summaryTotal').textContent = `￥${total.toFixed(2)}`;
+        document.getElementById('summaryNights').textContent = `${nights} nights × $`;
+        document.getElementById('summaryNightPrice').textContent = `${currentProperty.pricePerNight}/night`;
+        document.getElementById('summaryTotal').textContent = `$${total.toFixed(2)} ${currentProperty.currency}`;
       }
     }
 
-    // 添加日期变更监听
     document.addEventListener('change', (e) => {
       if (e.target.id === 'checkIn' || e.target.id === 'checkOut') {
         updatePrice();
       }
     });
 
-    // 提交预订
     async function submitBooking(event) {
       event.preventDefault();
 
@@ -648,11 +637,11 @@
         if (response.ok) {
           const message = `
             <div class="success-message">
-              <strong>✓ 预订成功！</strong><br>
-              预订编号：${result.confirmationCode}<br>
-              总价：￥${result.totalPrice.toFixed(2)}<br>
+              <strong>✓ Booking Confirmed!</strong><br>
+              Confirmation Code: ${result.confirmationCode}<br>
+              Total Price: $${result.totalPrice.toFixed(2)} ${result.currency}<br>
               <br>
-              确认邮件已发送至 ${result.email}
+              Confirmation email sent to ${result.email}
             </div>
           `;
           document.getElementById('modalMessage').innerHTML = message;
@@ -666,16 +655,15 @@
           document.getElementById('modalMessage').innerHTML = `<div class="error-message">${result.error}</div>`;
         }
       } catch (error) {
-        document.getElementById('modalMessage').innerHTML = `<div class="error-message">预订失败，请重试</div>`;
-        console.error('预订失败:', error);
+        document.getElementById('modalMessage').innerHTML = `<div class="error-message">Booking failed. Please try again.</div>`;
+        console.error('Booking failed:', error);
       }
     }
 
-    // 搜索预订
     async function searchBooking() {
       const code = document.getElementById('bookingCode').value.trim();
       if (!code) {
-        alert('请输入预订编号');
+        alert('Please enter a confirmation code');
         return;
       }
 
@@ -687,32 +675,30 @@
           const bookingHtml = `
             <div class="success-message">
               <h3>${result.propertyName}</h3>
-              <p><strong>预订编号：</strong> ${result.confirmationCode}</p>
-              <p><strong>入住：</strong> ${new Date(result.checkIn).toLocaleDateString('zh-CN')}</p>
-              <p><strong>退房：</strong> ${new Date(result.checkOut).toLocaleDateString('zh-CN')}</p>
-              <p><strong>晚数：</strong> ${result.nights}</p>
-              <p><strong>人数：</strong> ${result.guests}</p>
-              <p><strong>总价：</strong> ￥${result.totalPrice.toFixed(2)}</p>
-              <p><strong>状态：</strong> ${result.status}</p>
+              <p><strong>Confirmation Code:</strong> ${result.confirmationCode}</p>
+              <p><strong>Check-in:</strong> ${new Date(result.checkIn).toLocaleDateString('en-US')}</p>
+              <p><strong>Check-out:</strong> ${new Date(result.checkOut).toLocaleDateString('en-US')}</p>
+              <p><strong>Nights:</strong> ${result.nights}</p>
+              <p><strong>Guests:</strong> ${result.guests}</p>
+              <p><strong>Total Price:</strong> $${result.totalPrice.toFixed(2)}</p>
+              <p><strong>Status:</strong> ${result.status}</p>
             </div>
           `;
           document.getElementById('bookingResult').innerHTML = bookingHtml;
         } else {
-          document.getElementById('bookingResult').innerHTML = `<div class="error-message">预订未找到</div>`;
+          document.getElementById('bookingResult').innerHTML = `<div class="error-message">Booking not found</div>`;
         }
       } catch (error) {
-        document.getElementById('bookingResult').innerHTML = `<div class="error-message">查询失败，请重试</div>`;
-        console.error('查询失败:', error);
+        document.getElementById('bookingResult').innerHTML = `<div class="error-message">Search failed. Please try again.</div>`;
+        console.error('Search failed:', error);
       }
     }
 
-    // 显示不同部分
     function showSection(sectionId) {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.getElementById(sectionId).classList.add('active');
     }
 
-    // 点击模态框外部关闭
     document.getElementById('bookingModal')?.addEventListener('click', (e) => {
       if (e.target.id === 'bookingModal') {
         closeBookingModal();

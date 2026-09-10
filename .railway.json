@@ -1,0 +1,6 @@
+{
+  "name": "property-booking-website",
+  "runtime": "nodejs",
+  "buildCommand": "npm install",
+  "startCommand": "npm start"
+}

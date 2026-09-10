@@ -28,49 +28,31 @@ function loadProperties() {
       return JSON.parse(data);
     }
   } catch (error) {
-    console.error('加载房源数据失败:', error);
+    console.error('Failed to load properties:', error);
   }
 
   // 返回默认房源
   return [
     {
       id: '1',
-      name: '温馨一卧室公寓',
-      location: '市中心',
-      price: 1200,
-      currency: 'CNY',
-      pricePerNight: 120,
-      rating: 4.8,
-      reviews: 125,
+      name: 'Modern Drouin Family Home | Long Stays Welcome',
+      location: 'Drouin, Victoria, Australia',
+      currency: 'AUD',
+      pricePerNight: 400,
+      peakSeasonPrice: 750,
+      rating: 4.9,
+      reviews: 48,
       image: '/images/property1.jpg',
-      description: '舒适的一卧室公寓，靠近公共交通',
-      bedrooms: 1,
-      bathrooms: 1,
-      guests: 2,
-      amenities: ['WiFi', '空调', '厨房', '停车场'],
+      description: 'Modern five-year-old, three-bedroom home designed for comfortable family and extended stays. Ideal for guests relocating during home repairs, families between homes, insurance-related accommodation and professionals working in Drouin or Warragul.',
+      bedrooms: 3,
+      bathrooms: 2,
+      guests: 6,
+      bedType: '1 Master + 2 Queen beds',
+      amenities: ['WiFi', 'Full Kitchen', 'Hot Water Spa Bath', 'Free Parking', 'Washing Machine', 'Heating & Cooling', 'Pet Friendly', 'Waterfront Location'],
+      minNights: 3,
       availableDates: {
         from: '2026-09-10',
-        to: '2026-12-31'
-      }
-    },
-    {
-      id: '2',
-      name: '豪华两卧室别墅',
-      location: '风景区',
-      price: 2500,
-      currency: 'CNY',
-      pricePerNight: 250,
-      rating: 4.9,
-      reviews: 89,
-      image: '/images/property2.jpg',
-      description: '带花园和山景的豪华别墅',
-      bedrooms: 2,
-      bathrooms: 2,
-      guests: 4,
-      amenities: ['WiFi', '游泳池', '花园', '停车场', '空调', '厨房'],
-      availableDates: {
-        from: '2026-09-15',
-        to: '2026-12-31'
+        to: '2027-12-31'
       }
     }
   ];
