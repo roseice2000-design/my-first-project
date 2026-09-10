@@ -348,6 +348,7 @@
     <ul>
       <li><a onclick="showSection('properties')">Properties</a></li>
       <li><a onclick="showSection('bookings')">My Bookings</a></li>
+      <li><a href="/insurance.html" target="_blank">🏢 Insurance</a></li>
       <li><a href="/import.html" target="_blank">📥 Import</a></li>
       <li><a href="/admin.html" target="_blank">📊 Admin</a></li>
       <li><a onclick="showSection('about')">About</a></li>
@@ -635,22 +636,25 @@
         const result = await response.json();
 
         if (response.ok) {
+          // Save booking data to sessionStorage for payment page
+          sessionStorage.setItem('booking', JSON.stringify(result));
+
           const message = `
             <div class="success-message">
               <strong>✓ Booking Confirmed!</strong><br>
               Confirmation Code: ${result.confirmationCode}<br>
               Total Price: $${result.totalPrice.toFixed(2)} ${result.currency}<br>
               <br>
-              Confirmation email sent to ${result.email}
+              Redirecting to payment...
             </div>
           `;
           document.getElementById('modalMessage').innerHTML = message;
           document.getElementById('bookingForm').style.display = 'none';
 
+          // Redirect to payment page after 2 seconds
           setTimeout(() => {
-            closeBookingModal();
-            document.getElementById('bookingForm').style.display = 'form';
-          }, 3000);
+            window.location.href = '/payment.html';
+          }, 2000);
         } else {
           document.getElementById('modalMessage').innerHTML = `<div class="error-message">${result.error}</div>`;
         }

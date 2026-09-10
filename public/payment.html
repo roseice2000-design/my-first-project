@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure Payment - Property Booking</title>
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      color: #333;
+      background-color: #f9f9f9;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      font-size: 1rem;
+      opacity: 0.95;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .payment-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .payment-method {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      cursor: pointer;
+      border: 2px solid #e0e0e0;
+      transition: all 0.3s;
+    }
+
+    .payment-method:hover {
+      border-color: #667eea;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+
+    .payment-method.active {
+      border-color: #667eea;
+      background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
+    }
+
+    .payment-method h3 {
+      color: #333;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .payment-method p {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .payment-form {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      display: none;
+    }
+
+    .payment-form.active {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #card-element {
+      border: 1px solid #ddd;
+      padding: 0.75rem;
+      border-radius: 6px;
+      background: white;
+    }
+
+    button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+      width: 100%;
+    }
+
+    button:hover {
+      transform: scale(1.02);
+    }
+
+    .summary {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+    }
+
+    .summary h2 {
+      color: #333;
+      margin-bottom: 1rem;
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem 0;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #667eea;
+    }
+
+    .security-badges {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+      padding: 1rem;
+      background: #f5f5f5;
+      border-radius: 6px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      font-size: 0.9rem;
+      color: #666;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .success-message, .error-message {
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .success-message.show, .error-message.show {
+      display: block;
+    }
+
+    .error-message {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .footer {
+      text-align: center;
+      color: #666;
+      margin-top: 2rem;
+      padding: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .payment-container {
+        grid-template-columns: 1fr;
+      }
+
+      header h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>💳 Secure Payment</h1>
+    <p>Multiple Payment Methods Available</p>
+  </header>
+
+  <div class="container">
+    <!-- Booking Summary -->
+    <div class="summary">
+      <h2>📋 Booking Summary</h2>
+      <div class="summary-item">
+        <span>Accommodation (3 nights @ $400/night)</span>
+        <span>$1,200.00 AUD</span>
+      </div>
+      <div class="summary-item">
+        <span>Service Fee</span>
+        <span>$0.00 AUD</span>
+      </div>
+      <div class="summary-item">
+        <span>Taxes</span>
+        <span>$0.00 AUD</span>
+      </div>
+      <div class="summary-total">
+        <span>Total Amount Due</span>
+        <span id="totalAmount">$1,200.00 AUD</span>
+      </div>
+    </div>
+
+    <!-- Payment Methods -->
+    <h2 style="margin-bottom: 1.5rem; color: #333;">Choose Payment Method</h2>
+
+    <div class="payment-container">
+      <div class="payment-method active" onclick="selectPayment('stripe')">
+        <h3>💳 Credit/Debit Card</h3>
+        <p>Secure payment via Stripe</p>
+        <p style="font-size: 0.8rem; margin-top: 0.5rem;">Visa, Mastercard, American Express</p>
+      </div>
+
+      <div class="payment-method" onclick="selectPayment('alipay')">
+        <h3>🛍️ Alipay</h3>
+        <p>支付宝支付</p>
+        <p style="font-size: 0.8rem; margin-top: 0.5rem;">Popular in China & Asia</p>
+      </div>
+
+      <div class="payment-method" onclick="selectPayment('wechat')">
+        <h3>💬 WeChat Pay</h3>
+        <p>微信支付</p>
+        <p style="font-size: 0.8rem; margin-top: 0.5rem;">WeChat Payment</p>
+      </div>
+
+      <div class="payment-method" onclick="selectPayment('paypal')">
+        <h3>🅿️ PayPal</h3>
+        <p>International payment</p>
+        <p style="font-size: 0.8rem; margin-top: 0.5rem;">Fast & Secure</p>
+      </div>
+    </div>
+
+    <!-- Stripe Payment Form -->
+    <div id="stripe-form" class="payment-form active">
+      <h2 style="margin-bottom: 1.5rem;">Card Details</h2>
+
+      <div id="messageContainer"></div>
+
+      <form id="stripeForm" onsubmit="processStripePayment(event)">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="cardholderName" placeholder="John Doe" required>
+        </div>
+
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" id="cardholderEmail" placeholder="john@example.com" required>
+        </div>
+
+        <div class="form-group">
+          <label>Card Details *</label>
+          <div id="card-element"></div>
+        </div>
+
+        <button type="submit">💳 Pay $1,200.00 AUD</button>
+      </form>
+    </div>
+
+    <!-- Alipay Form -->
+    <div id="alipay-form" class="payment-form">
+      <h2 style="margin-bottom: 1.5rem;">Alipay Payment</h2>
+
+      <form onsubmit="processAlipay(event)">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" placeholder="Your name" required>
+        </div>
+
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" placeholder="your@email.com" required>
+        </div>
+
+        <div style="background: #f0f0f0; padding: 1.5rem; border-radius: 6px; text-align: center; margin-bottom: 1.5rem;">
+          <p style="color: #666; margin-bottom: 1rem;">You will be redirected to Alipay to complete the payment</p>
+          <p style="font-size: 0.9rem; color: #999;">Amount: ¥6,500 CNY (approximately)</p>
+        </div>
+
+        <button type="submit">🛍️ Pay via Alipay</button>
+      </form>
+    </div>
+
+    <!-- WeChat Pay Form -->
+    <div id="wechat-form" class="payment-form">
+      <h2 style="margin-bottom: 1.5rem;">WeChat Payment</h2>
+
+      <form onsubmit="processWechat(event)">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" placeholder="Your name" required>
+        </div>
+
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" placeholder="your@email.com" required>
+        </div>
+
+        <div style="background: #f0f0f0; padding: 1.5rem; border-radius: 6px; text-align: center; margin-bottom: 1.5rem;">
+          <p style="color: #666; margin-bottom: 1rem;">Scan the QR code with your WeChat app to complete the payment</p>
+          <div style="width: 200px; height: 200px; background: white; margin: 1rem auto; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; color: #999;">
+            QR Code will appear here
+          </div>
+          <p style="font-size: 0.9rem; color: #999;">Amount: ¥6,500 CNY</p>
+        </div>
+
+        <button type="submit">💬 Pay via WeChat</button>
+      </form>
+    </div>
+
+    <!-- PayPal Form -->
+    <div id="paypal-form" class="payment-form">
+      <h2 style="margin-bottom: 1.5rem;">PayPal Payment</h2>
+
+      <form onsubmit="processPaypal(event)">
+        <div class="form-group">
+          <label>Email Address *</label>
+          <input type="email" placeholder="your@email.com" required>
+        </div>
+
+        <div style="background: #f0f0f0; padding: 1.5rem; border-radius: 6px; text-align: center; margin-bottom: 1.5rem;">
+          <p style="color: #666; margin-bottom: 1rem;">You will be redirected to PayPal to complete the payment</p>
+          <p style="font-size: 0.9rem; color: #999;">Amount: $1,200.00 AUD</p>
+        </div>
+
+        <button type="submit">🅿️ Pay via PayPal</button>
+      </form>
+    </div>
+
+    <!-- Security Badges -->
+    <div class="security-badges">
+      <div class="badge">🔒 SSL Encrypted</div>
+      <div class="badge">✅ PCI Compliant</div>
+      <div class="badge">🛡️ Fraud Protected</div>
+      <div class="badge">🔐 Secure Processing</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>&copy; 2026 Property Booking - Secure Payment Processing</p>
+    <p>Your payment information is encrypted and secure</p>
+  </div>
+
+  <script>
+    let stripe;
+    let elements;
+    let cardElement;
+    let currentPaymentMethod = 'stripe';
+
+    // Initialize Stripe
+    function initStripe() {
+      stripe = Stripe('pk_test_your_key_here'); // Replace with your Stripe key
+      elements = stripe.elements();
+      cardElement = elements.create('card');
+      cardElement.mount('#card-element');
+    }
+
+    function selectPayment(method) {
+      currentPaymentMethod = method;
+
+      // Update active button
+      document.querySelectorAll('.payment-method').forEach(el => {
+        el.classList.remove('active');
+      });
+      event.target.closest('.payment-method').classList.add('active');
+
+      // Update active form
+      document.querySelectorAll('.payment-form').forEach(form => {
+        form.classList.remove('active');
+      });
+      document.getElementById(method + '-form').classList.add('active');
+
+      // Initialize Stripe only when needed
+      if (method === 'stripe' && !stripe) {
+        initStripe();
+      }
+    }
+
+    async function processStripePayment(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('cardholderName').value;
+      const email = document.getElementById('cardholderEmail').value;
+
+      // Simulate payment processing
+      const messageContainer = document.getElementById('messageContainer');
+      messageContainer.innerHTML = '<div class="success-message show">✅ Payment processing... (Demo Mode)</div>';
+
+      setTimeout(() => {
+        messageContainer.innerHTML = `
+          <div class="success-message show">
+            <strong>✅ Payment Successful!</strong><br>
+            Thank you for your booking. Confirmation email sent to ${email}
+          </div>
+        `;
+      }, 2000);
+    }
+
+    function processAlipay(e) {
+      e.preventDefault();
+      alert('🛍️ Redirecting to Alipay...\n\nIn production, this would redirect to Alipay payment gateway.');
+    }
+
+    function processWechat(e) {
+      e.preventDefault();
+      alert('💬 WeChat Pay QR Code Generated\n\nIn production, this would display a scannable WeChat Pay QR code.');
+    }
+
+    function processPaypal(e) {
+      e.preventDefault();
+      alert('🅿️ Redirecting to PayPal...\n\nIn production, this would redirect to PayPal payment gateway.');
+    }
+
+    // Initialize with Stripe by default
+    window.addEventListener('load', () => {
+      initStripe();
+    });
+  </script>
+</body>
+</html>

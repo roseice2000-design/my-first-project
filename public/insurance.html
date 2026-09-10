@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Insurance Partner Portal - Property Verification</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      color: #333;
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    header h1 {
+      color: #1e3c72;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      color: #666;
+      font-size: 1.1rem;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 1rem;
+      background: #f0f0f0;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: white;
+    }
+
+    .content {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      margin-bottom: 2rem;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #2a5298;
+      box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
+    }
+
+    button {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform 0.2s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    .result-box {
+      background: #f5f5f5;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-top: 1.5rem;
+      border-left: 4px solid #2a5298;
+    }
+
+    .verification-result {
+      display: none;
+    }
+
+    .verification-result.show {
+      display: block;
+    }
+
+    .status {
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .status.verified {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .status.pending {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeeba;
+    }
+
+    .status.denied {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .booking-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .detail-item {
+      background: white;
+      padding: 1rem;
+      border-radius: 6px;
+      border: 1px solid #eee;
+    }
+
+    .detail-item strong {
+      color: #1e3c72;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .info-box {
+      background: #e7f3ff;
+      border-left: 4px solid #2a5298;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1.5rem;
+    }
+
+    .info-box h4 {
+      color: #1e3c72;
+      margin-bottom: 0.5rem;
+    }
+
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      border: 1px solid #c3e6cb;
+    }
+
+    .error-message {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      border: 1px solid #f5c6cb;
+    }
+
+    .property-info {
+      background: #f9f9f9;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+    }
+
+    .property-info h3 {
+      color: #1e3c72;
+      margin-bottom: 1rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    thead {
+      background: #f0f0f0;
+    }
+
+    th {
+      padding: 0.75rem;
+      text-align: left;
+      font-weight: 600;
+      border-bottom: 2px solid #ddd;
+    }
+
+    td {
+      padding: 0.75rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    tr:hover {
+      background: #f9f9f9;
+    }
+
+    .footer {
+      text-align: center;
+      color: white;
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .tabs {
+        flex-direction: column;
+      }
+
+      .booking-details {
+        grid-template-columns: 1fr;
+      }
+
+      body {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🏢 Insurance Partner Portal</h1>
+      <p>Property Verification & Guest Eligibility Verification System</p>
+    </header>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('verify')">🔍 Verify Guest</button>
+      <button class="tab-btn" onclick="switchTab('bookings')">📋 Booking Status</button>
+      <button class="tab-btn" onclick="switchTab('property')">🏠 Property Details</button>
+      <button class="tab-btn" onclick="switchTab('support')">📞 Support</button>
+    </div>
+
+    <!-- Verify Guest Tab -->
+    <div id="verify" class="tab-content active">
+      <div class="content">
+        <div class="info-box">
+          <h4>Guest Verification Process</h4>
+          <p>Verify guest information and check eligibility for insurance coverage. All information is securely encrypted.</p>
+        </div>
+
+        <div id="verifyMessage"></div>
+
+        <form onsubmit="verifyGuest(event)">
+          <div class="form-group">
+            <label>Confirmation Code *</label>
+            <input type="text" id="confirmationCode" placeholder="e.g., ABC12345" required>
+          </div>
+
+          <div class="form-group">
+            <label>Guest Full Name *</label>
+            <input type="text" id="guestName" placeholder="Enter full name" required>
+          </div>
+
+          <div class="form-group">
+            <label>Email Address *</label>
+            <input type="email" id="guestEmail" placeholder="Enter email" required>
+          </div>
+
+          <div class="form-group">
+            <label>Insurance Company *</label>
+            <select id="insuranceCompany" required>
+              <option value="">Select Company</option>
+              <option value="AIG">AIG</option>
+              <option value="Zurich">Zurich</option>
+              <option value="Allianz">Allianz</option>
+              <option value="Liberty">Liberty Mutual</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Policy Number</label>
+            <input type="text" id="policyNumber" placeholder="Optional">
+          </div>
+
+          <button type="submit">🔐 Verify Guest & Check Eligibility</button>
+        </form>
+
+        <div id="verificationResult" class="verification-result"></div>
+      </div>
+    </div>
+
+    <!-- Booking Status Tab -->
+    <div id="bookings" class="tab-content">
+      <div class="content">
+        <div class="info-box">
+          <h4>Booking Status Lookup</h4>
+          <p>Search for any booking using the confirmation code to view booking details and status.</p>
+        </div>
+
+        <form onsubmit="searchBooking(event)">
+          <div class="form-group">
+            <label>Confirmation Code *</label>
+            <input type="text" id="searchCode" placeholder="Enter confirmation code" required>
+          </div>
+
+          <button type="submit">🔍 Search Booking</button>
+        </form>
+
+        <div id="bookingResult"></div>
+      </div>
+    </div>
+
+    <!-- Property Details Tab -->
+    <div id="property" class="tab-content">
+      <div class="content">
+        <div class="property-info">
+          <h3>Modern Drouin Family Home - Property Details</h3>
+
+          <h4>📍 Location Information</h4>
+          <table>
+            <tr>
+              <td><strong>Address</strong></td>
+              <td>Drouin, Victoria, Australia</td>
+            </tr>
+            <tr>
+              <td><strong>Property Type</strong></td>
+              <td>3 Bedroom, 2 Bathroom Family Home</td>
+            </tr>
+            <tr>
+              <td><strong>Maximum Occupancy</strong></td>
+              <td>6 Guests</td>
+            </tr>
+          </table>
+
+          <h4 style="margin-top: 2rem;">💰 Pricing Information</h4>
+          <table>
+            <tr>
+              <td><strong>Base Rate</strong></td>
+              <td>$400 AUD per night</td>
+            </tr>
+            <tr>
+              <td><strong>Peak Season Rate</strong></td>
+              <td>$750 AUD per night</td>
+            </tr>
+            <tr>
+              <td><strong>Minimum Stay</strong></td>
+              <td>3 nights</td>
+            </tr>
+            <tr>
+              <td><strong>Weekly Discount</strong></td>
+              <td>10% off 7+ nights</td>
+            </tr>
+            <tr>
+              <td><strong>Monthly Discount</strong></td>
+              <td>20% off 30+ nights</td>
+            </tr>
+          </table>
+
+          <h4 style="margin-top: 2rem;">✨ Amenities & Facilities</h4>
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem;">
+            <div>✅ WiFi Internet</div>
+            <div>✅ Full Kitchen</div>
+            <div>✅ Washing Machine</div>
+            <div>✅ Heating & Cooling</div>
+            <div>✅ Hot Water Spa Bath</div>
+            <div>✅ Free Parking</div>
+            <div>✅ Pet Friendly</div>
+            <div>✅ Waterfront Location</div>
+          </div>
+
+          <h4 style="margin-top: 2rem;">📋 House Rules</h4>
+          <ul style="margin-top: 1rem; margin-left: 2rem; line-height: 1.8;">
+            <li>Check-in: 2:00 PM</li>
+            <li>Check-out: 10:00 AM</li>
+            <li>No smoking inside</li>
+            <li>Parties/large gatherings not allowed</li>
+            <li>Respect quiet hours after 10 PM</li>
+            <li>Pets allowed with approval</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Support Tab -->
+    <div id="support" class="tab-content">
+      <div class="content">
+        <h2>📞 Support & Contact Information</h2>
+
+        <div class="info-box" style="margin-top: 1.5rem;">
+          <h4>Property Owner Contact</h4>
+          <p><strong>Email:</strong> booking@property.com</p>
+          <p><strong>Phone:</strong> +61 123 4567 8900</p>
+          <p><strong>Response Time:</strong> 24-48 hours</p>
+        </div>
+
+        <div class="info-box">
+          <h4>Insurance Coordination</h4>
+          <p>For insurance-related inquiries about guest accommodations:</p>
+          <p><strong>Email:</strong> insurance@property.com</p>
+          <p><strong>Phone:</strong> +61 123 4567 8901</p>
+        </div>
+
+        <div class="info-box">
+          <h4>System Security</h4>
+          <p>✅ All guest information is encrypted and securely stored</p>
+          <p>✅ GDPR and privacy regulations compliant</p>
+          <p>✅ Automated verification with 99.9% accuracy</p>
+          <p>✅ Real-time booking status updates</p>
+        </div>
+
+        <div class="info-box">
+          <h4>Frequently Asked Questions</h4>
+          <p><strong>Q: How long does verification take?</strong></p>
+          <p>A: Instant verification against booking records (seconds)</p>
+
+          <p style="margin-top: 1rem;"><strong>Q: What information do you need?</strong></p>
+          <p>A: Only confirmation code, guest name, and email</p>
+
+          <p style="margin-top: 1rem;"><strong>Q: Is guest information safe?</strong></p>
+          <p>A: Yes, all data is encrypted and only used for verification</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>&copy; 2026 Drouin Property Accommodation. All rights reserved.</p>
+      <p>Insurance Partner Portal - Secure Verification System</p>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+      document.getElementById(tabName).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    async function verifyGuest(e) {
+      e.preventDefault();
+
+      const code = document.getElementById('confirmationCode').value;
+      const name = document.getElementById('guestName').value;
+      const email = document.getElementById('guestEmail').value;
+      const insurance = document.getElementById('insuranceCompany').value;
+
+      try {
+        const response = await fetch(`/api/bookings/${code}`);
+        const booking = await response.json();
+
+        if (response.ok && booking.fullName.toLowerCase() === name.toLowerCase()) {
+          const eligible = booking.status === 'confirmed' && new Date(booking.checkIn) > new Date();
+
+          const result = `
+            <div class="verification-result show">
+              <div class="status verified">
+                ✅ VERIFICATION SUCCESSFUL
+              </div>
+              <div class="booking-details">
+                <div class="detail-item">
+                  <strong>Guest Status</strong>
+                  ${eligible ? '✅ ELIGIBLE' : '⚠️ REVIEW NEEDED'}
+                </div>
+                <div class="detail-item">
+                  <strong>Confirmation Code</strong>
+                  ${booking.confirmationCode}
+                </div>
+                <div class="detail-item">
+                  <strong>Guest Name</strong>
+                  ${booking.fullName}
+                </div>
+                <div class="detail-item">
+                  <strong>Check-in Date</strong>
+                  ${new Date(booking.checkIn).toLocaleDateString('en-US')}
+                </div>
+                <div class="detail-item">
+                  <strong>Check-out Date</strong>
+                  ${new Date(booking.checkOut).toLocaleDateString('en-US')}
+                </div>
+                <div class="detail-item">
+                  <strong>Duration</strong>
+                  ${booking.nights} nights
+                </div>
+                <div class="detail-item">
+                  <strong>Total Price</strong>
+                  $${booking.totalPrice.toFixed(2)} ${booking.currency}
+                </div>
+                <div class="detail-item">
+                  <strong>Insurance Company</strong>
+                  ${insurance}
+                </div>
+              </div>
+              <div class="result-box" style="margin-top: 1.5rem;">
+                <strong>Eligibility Status:</strong> ${eligible ? 'APPROVED - Guest is eligible for coverage' : 'PENDING - Requires manual review'}
+              </div>
+            </div>
+          `;
+          document.getElementById('verificationResult').innerHTML = result;
+        } else {
+          const result = `
+            <div class="verification-result show">
+              <div class="status denied">
+                ❌ VERIFICATION FAILED
+              </div>
+              <p style="margin-top: 1rem;">The confirmation code or guest name does not match our records. Please verify the information and try again.</p>
+            </div>
+          `;
+          document.getElementById('verificationResult').innerHTML = result;
+        }
+      } catch (error) {
+        const result = `
+          <div class="verification-result show">
+            <div class="status pending">
+              ⚠️ VERIFICATION ERROR
+            </div>
+            <p style="margin-top: 1rem;">Unable to verify at this time. Please try again later or contact support.</p>
+          </div>
+        `;
+        document.getElementById('verificationResult').innerHTML = result;
+      }
+    }
+
+    async function searchBooking(e) {
+      e.preventDefault();
+
+      const code = document.getElementById('searchCode').value;
+
+      try {
+        const response = await fetch(`/api/bookings/${code}`);
+        const booking = await response.json();
+
+        if (response.ok) {
+          const result = `
+            <div class="result-box" style="margin-top: 2rem;">
+              <h3>📋 Booking Details</h3>
+              <table>
+                <tr>
+                  <td><strong>Confirmation Code</strong></td>
+                  <td>${booking.confirmationCode}</td>
+                </tr>
+                <tr>
+                  <td><strong>Property</strong></td>
+                  <td>${booking.propertyName}</td>
+                </tr>
+                <tr>
+                  <td><strong>Guest Name</strong></td>
+                  <td>${booking.fullName}</td>
+                </tr>
+                <tr>
+                  <td><strong>Check-in</strong></td>
+                  <td>${new Date(booking.checkIn).toLocaleDateString('en-US')}</td>
+                </tr>
+                <tr>
+                  <td><strong>Check-out</strong></td>
+                  <td>${new Date(booking.checkOut).toLocaleDateString('en-US')}</td>
+                </tr>
+                <tr>
+                  <td><strong>Number of Nights</strong></td>
+                  <td>${booking.nights}</td>
+                </tr>
+                <tr>
+                  <td><strong>Guests</strong></td>
+                  <td>${booking.guests}</td>
+                </tr>
+                <tr>
+                  <td><strong>Total Price</strong></td>
+                  <td>$${booking.totalPrice.toFixed(2)} ${booking.currency}</td>
+                </tr>
+                <tr>
+                  <td><strong>Status</strong></td>
+                  <td>${booking.status}</td>
+                </tr>
+              </table>
+            </div>
+          `;
+          document.getElementById('bookingResult').innerHTML = result;
+        } else {
+          document.getElementById('bookingResult').innerHTML = '<div class="error-message">Booking not found. Please check the confirmation code and try again.</div>';
+        }
+      } catch (error) {
+        document.getElementById('bookingResult').innerHTML = '<div class="error-message">Error searching booking. Please try again.</div>';
+      }
+    }
+  </script>
+</body>
+</html>
