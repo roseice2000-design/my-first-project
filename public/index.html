@@ -99,6 +99,94 @@
       justify-content: center;
       color: white;
       font-size: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .carousel {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .carousel-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+      position: absolute;
+    }
+
+    .carousel-image.active {
+      display: block;
+    }
+
+    .carousel-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-size: 3rem;
+    }
+
+    .carousel-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      z-index: 10;
+      transition: background 0.3s;
+    }
+
+    .carousel-nav:hover {
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    .carousel-prev {
+      left: 8px;
+    }
+
+    .carousel-next {
+      right: 8px;
+    }
+
+    .carousel-dots {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      z-index: 10;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .dot.active {
+      background: white;
     }
 
     .property-info {
@@ -510,10 +598,25 @@
 
     function displayProperties(propertiesToShow) {
       const list = document.getElementById('propertiesList');
-      list.innerHTML = propertiesToShow.map(property => `
-        <div class="property-card" onclick="openBookingModal('${property.id}')">
-          <div class="property-image">
-            🏡
+      list.innerHTML = propertiesToShow.map((property, idx) => `
+        <div class="property-card">
+          <div class="property-image" onclick="openBookingModal('${property.id}')">
+            <div class="carousel" id="carousel-${idx}">
+              ${property.images && property.images.length > 0 ? `
+                ${property.images.map((img, imgIdx) => `
+                  <img src="${img}" alt="Property image ${imgIdx + 1}" class="carousel-image ${imgIdx === 0 ? 'active' : ''}">
+                `).join('')}
+                <button class="carousel-nav carousel-prev" onclick="prevImage(event, ${idx})">❮</button>
+                <button class="carousel-nav carousel-next" onclick="nextImage(event, ${idx})">❯</button>
+                <div class="carousel-dots">
+                  ${property.images.map((_, imgIdx) => `
+                    <div class="dot ${imgIdx === 0 ? 'active' : ''}" onclick="goToImage(event, ${idx}, ${imgIdx})"></div>
+                  `).join('')}
+                </div>
+              ` : `
+                <div class="carousel-fallback">🏡</div>
+              `}
+            </div>
           </div>
           <div class="property-info">
             <div class="property-name">${property.name}</div>
@@ -531,10 +634,54 @@
               $${property.pricePerNight}
               <div class="price-subtitle">/night</div>
             </div>
-            <button>View Details →</button>
+            <button onclick="openBookingModal('${property.id}')">View Details →</button>
           </div>
         </div>
       `).join('');
+    }
+
+    function prevImage(event, carouselIdx) {
+      event.stopPropagation();
+      const carousel = document.getElementById(`carousel-${carouselIdx}`);
+      const images = carousel.querySelectorAll('.carousel-image');
+      const dots = carousel.querySelectorAll('.dot');
+      const active = carousel.querySelector('.carousel-image.active');
+      const currentIdx = Array.from(images).indexOf(active);
+      const prevIdx = (currentIdx - 1 + images.length) % images.length;
+
+      images[currentIdx].classList.remove('active');
+      images[prevIdx].classList.add('active');
+      dots[currentIdx].classList.remove('active');
+      dots[prevIdx].classList.add('active');
+    }
+
+    function nextImage(event, carouselIdx) {
+      event.stopPropagation();
+      const carousel = document.getElementById(`carousel-${carouselIdx}`);
+      const images = carousel.querySelectorAll('.carousel-image');
+      const dots = carousel.querySelectorAll('.dot');
+      const active = carousel.querySelector('.carousel-image.active');
+      const currentIdx = Array.from(images).indexOf(active);
+      const nextIdx = (currentIdx + 1) % images.length;
+
+      images[currentIdx].classList.remove('active');
+      images[nextIdx].classList.add('active');
+      dots[currentIdx].classList.remove('active');
+      dots[nextIdx].classList.add('active');
+    }
+
+    function goToImage(event, carouselIdx, targetIdx) {
+      event.stopPropagation();
+      const carousel = document.getElementById(`carousel-${carouselIdx}`);
+      const images = carousel.querySelectorAll('.carousel-image');
+      const dots = carousel.querySelectorAll('.dot');
+      const active = carousel.querySelector('.carousel-image.active');
+      const currentIdx = Array.from(images).indexOf(active);
+
+      images[currentIdx].classList.remove('active');
+      images[targetIdx].classList.add('active');
+      dots[currentIdx].classList.remove('active');
+      dots[targetIdx].classList.add('active');
     }
 
     function filterProperties() {

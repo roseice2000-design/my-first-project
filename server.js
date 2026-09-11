@@ -42,7 +42,13 @@ function loadProperties() {
       peakSeasonPrice: 750,
       rating: 4.9,
       reviews: 48,
-      image: '/images/property1.jpg',
+      images: [
+        '/images/exterior.jpg',
+        '/images/bedroom1.jpg',
+        '/images/bedroom2.jpg',
+        '/images/living-room.jpg',
+        '/images/kitchen.jpg'
+      ],
       description: 'Modern five-year-old, three-bedroom home designed for comfortable family and extended stays. Ideal for guests relocating during home repairs, families between homes, insurance-related accommodation and professionals working in Drouin or Warragul.',
       bedrooms: 3,
       bathrooms: 2,
