@@ -47,13 +47,20 @@ S=skills/archilux-project-film/scripts; P=projects/<项目>
 python3 $S/render_frames.py $P/storyboard.json     # ① 出静帧，先给 Katie 看
 python3 $S/gen_images.py $P/storyboard.json        # ② 跑 AI 改图（gen 字段），回写 image
 python3 $S/render_frames.py $P/storyboard.json     # ③ 用新图重出静帧
-python3 $S/build_video.py $P/storyboard.json [--music bgm.mp3]   # ④ 合成 1080p 视频
+python3 $S/kling_video.py $P/storyboard.json       # ④ 可灵首尾帧转场片段（kling 字段，可选）
+python3 $S/build_video.py $P/storyboard.json [--music bgm.mp3]   # ⑤ 合成 1080p 视频
 ```
 
 - 先复制 `projects/beijing-yunji/storyboard.json` 改，字段见 `templates/storyboard.schema.md`。
 - 每次只改 storyboard.json，然后重跑 ①④；不手改图片。
 - AI 改图用 Replicate（`black-forest-labs/flux-kontext-pro`，以实景为原图做局部改动）。提示词要写“Keep everything else exactly the same”，只改一处。先 `--dry-run` 看提示词，再 `--only 5` 单张跑。
 - 静帧 3840×2160，视频 1920×1080 / 30fps，镜头 4–8 秒，叠化 1 秒，总长控制在 45–75 秒。
+
+## 三之二、可灵（国际版）
+
+- 接口 `api-singapore.klingai.com`，`Authorization: Bearer <API Key>`；云端会话由代理注入密钥，本地设 `KLING_API_KEY`。
+- 丝滑转场做法见 `templates/丝滑转场.md`：首帧＝实景，尾帧＝改造图；空间串联时上一段尾帧＝下一段首帧，`xfade: 0` 硬接。
+- App 送的免费额度不一定能用于 API，先在开发者后台确认资源包。
 
 ## 四、交付
 

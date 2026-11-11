@@ -33,14 +33,21 @@ def main():
         xexp = {"left": f"(iw-iw/zoom)*on/{n}", "right": f"(iw-iw/zoom)*(1-on/{n})"}.get(move, "iw/2-(iw/zoom/2)")
         if move in ("left", "right"):
             z = "1.06"
+        if shot.get("video"):  # 可灵等生成的视频片段：直接用，不做推拉
+            v = (sb_path.parent / shot["video"]).resolve()
+            inputs += ["-t", str(dur), "-i", str(v)]
+            filters.append(f"[{i}:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,"
+                           f"fps={FPS},trim=0:{dur},setpts=PTS-STARTPTS,setsar=1,format=yuv420p[v{i}]")
+            continue
         inputs += ["-loop", "1", "-t", str(dur), "-i", str(frames / f"{i+1:02d}.png")]
         filters.append(f"[{i}:v]zoompan=z='{z}':x='{xexp}':y='ih/2-(ih/zoom/2)':d={n}:s=1920x1080:fps={FPS},setsar=1,format=yuv420p[v{i}]")
 
     last, t = "v0", durs[0]
     for i in range(1, len(durs)):
-        off = t - XF
-        filters.append(f"[{last}][v{i}]xfade=transition=fade:duration={XF}:offset={off:.2f}[x{i}]")
-        last, t = f"x{i}", t + durs[i] - XF
+        xf = float(sb["shots"][i].get("xfade", XF)) or 0.04  # 0 = 硬接（首尾帧相同的一镜到底）
+        off = t - xf
+        filters.append(f"[{last}][v{i}]xfade=transition=fade:duration={xf}:offset={off:.2f}[x{i}]")
+        last, t = f"x{i}", t + durs[i] - xf
     total = t
     filters.append(f"[{last}]fade=t=in:st=0:d=0.8,fade=t=out:st={total-1.2:.2f}:d=1.2[vout]")
 
