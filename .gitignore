@@ -18,3 +18,8 @@ build/
 .nuxt/
 .vercel/
 .output/
+
+# 项目资料与成片：客户隐私 + 开发商图片版权，不进 git
+projects/*/assets/
+projects/*/gen/
+projects/*/build/

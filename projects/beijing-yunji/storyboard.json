@@ -1,0 +1,275 @@
+{
+  "slug": "beijing-yunji-v1",
+  "project": "北京懋源·云纪别墅",
+  "style": {
+    "paper": [
+      244,
+      239,
+      230
+    ],
+    "ink": [
+      60,
+      48,
+      40
+    ],
+    "accent": [
+      139,
+      26,
+      26
+    ]
+  },
+  "music": "assets/bgm.mp3",
+  "shots": [
+    {
+      "node": "01 封面",
+      "layout": "full",
+      "image": "assets/exterior.jpg",
+      "duration": 5,
+      "move": "in",
+      "text": [
+        {
+          "kind": "eyebrow",
+          "text": "ARCHILUX LIVING"
+        },
+        {
+          "kind": "title",
+          "text": "北京 懋源·云纪"
+        },
+        {
+          "kind": "subtitle",
+          "text": "A Home, Begun with Care"
+        }
+      ]
+    },
+    {
+      "node": "02 写在前面",
+      "layout": "split",
+      "image": "assets/courtyard.jpg",
+      "duration": 6,
+      "move": "left",
+      "caption": "庭院的绿，借进屋里",
+      "text": [
+        {
+          "kind": "eyebrow",
+          "text": "PROLOGUE｜写在前面"
+        },
+        {
+          "kind": "subtitle",
+          "text": "先恭喜您。"
+        },
+        {
+          "kind": "body",
+          "text": "这是一座被大师用心对待过的房子。"
+        },
+        {
+          "kind": "body",
+          "text": "庭院的绿，被借进了屋里；"
+        },
+        {
+          "kind": "body",
+          "text": "壁炉与石材，都有它的来处。"
+        }
+      ]
+    },
+    {
+      "node": "03 我听见的",
+      "layout": "card",
+      "image": "assets/living-hall.jpg",
+      "duration": 6,
+      "move": "in",
+      "text": [
+        {
+          "kind": "eyebrow",
+          "text": "WHAT WE HEARD｜我听见的"
+        },
+        {
+          "kind": "subtitle",
+          "text": "一个往后几十年都住得安心的家"
+        },
+        {
+          "kind": "body",
+          "text": "有木头的温润，有茶香与紫砂，有一家人的烟火气。"
+        },
+        {
+          "kind": "body",
+          "text": "不要金碧辉煌。"
+        }
+      ]
+    },
+    {
+      "node": "03b 五层空间总览",
+      "layout": "plan",
+      "image": "assets/plans/all-floors.jpg",
+      "duration": 6,
+      "move": "in",
+      "caption": "04地块 48#/49#-1｜开发商平面布置图",
+      "text": [
+        {
+          "kind": "eyebrow",
+          "text": "THE HOUSE｜五层空间"
+        },
+        {
+          "kind": "body",
+          "text": "-2F 休闲收藏 · -1F 餐厨宴会 · 1F 会客 · 2F 家庭套房 · 3F 主人层"
+        }
+      ]
+    },
+    {
+      "node": "04a 餐厨层平面",
+      "layout": "plan",
+      "image": "assets/plans/B1.jpg",
+      "duration": 4,
+      "move": "in",
+      "text": [
+        {
+          "kind": "eyebrow",
+          "text": "-1F｜餐厨层"
+        }
+      ]
+    },
+    {
+      "node": "04 痛点·地面",
+      "layout": "full",
+      "image": "assets/dining-living.jpg",
+      "duration": 5,
+      "move": "right",
+      "text": [
+        {
+          "kind": "eyebrow",
+          "text": "放不下的第一处"
+        },
+        {
+          "kind": "subtitle",
+          "text": "那片碎拼的绿色大理石，很美，却有点碎。"
+        }
+      ]
+    },
+    {
+      "node": "05 方向·地毯（AI 改图）",
+      "layout": "full",
+      "image": "assets/dining-living.jpg",
+      "duration": 6,
+      "move": "in",
+      "gen": {
+        "model": "black-forest-labs/flux-kontext-pro",
+        "source": "assets/dining-living.jpg",
+        "out": "gen/05_rug.jpg",
+        "prompt": "Keep the room, furniture, ceiling and lighting exactly the same. Lay one very large, calm, low-pile wool rug in warm ivory and soft sage under the dining table and living area so most of the fragmented green marble floor is covered. Photorealistic interior photography."
+      },
+      "caption": "方向示意｜AI 生成，非最终方案",
+      "text": [
+        {
+          "kind": "eyebrow",
+          "text": "DIRECTION｜地面"
+        },
+        {
+          "kind": "subtitle",
+          "text": "一张颜色安静的大地毯，来装饰与协调。"
+        }
+      ]
+    },
+    {
+      "node": "06 方向·紫砂壶（AI 生成）",
+      "layout": "split",
+      "image": "assets/leisure-floor.jpg",
+      "duration": 6,
+      "move": "left",
+      "gen": {
+        "model": "black-forest-labs/flux-kontext-pro",
+        "source": "assets/leisure-floor.jpg",
+        "out": "gen/06_teapots.jpg",
+        "prompt": "Replace the wall shelving with an open, airy walnut bogu display shelf holding a collection of Yixing zisha teapots, each in its own niche, soft warm lighting, no direct sunlight on the shelf. Keep the rest of the room unchanged. Photorealistic."
+      },
+      "caption": "方向示意｜AI 生成，非最终方案",
+      "text": [
+        {
+          "kind": "eyebrow",
+          "text": "DIRECTION｜紫砂壶"
+        },
+        {
+          "kind": "body",
+          "text": "通风、透气的博古架，"
+        },
+        {
+          "kind": "body",
+          "text": "避开阳光直射，远离厨房油烟。"
+        },
+        {
+          "kind": "body",
+          "text": "楼上留一处安静角落，品茶，看书。"
+        }
+      ]
+    },
+    {
+      "node": "07 方向·四季光线",
+      "layout": "full",
+      "image": "assets/terrace-lake.jpg",
+      "duration": 6,
+      "move": "right",
+      "text": [
+        {
+          "kind": "eyebrow",
+          "text": "DIRECTION｜先定光线和色彩"
+        },
+        {
+          "kind": "subtitle",
+          "text": "模拟四季阳光在您家里的走向，再预留灯位与插座。"
+        }
+      ]
+    },
+    {
+      "node": "08 我们这样走",
+      "layout": "card",
+      "image": "assets/plan-1f.jpg",
+      "duration": 8,
+      "move": "in",
+      "text": [
+        {
+          "kind": "eyebrow",
+          "text": "THE JOURNEY｜我们这样走"
+        },
+        {
+          "kind": "body",
+          "text": "01  深度分析 → 《需求确认书》"
+        },
+        {
+          "kind": "body",
+          "text": "02  模拟四季光线 → 方案册与点位图"
+        },
+        {
+          "kind": "body",
+          "text": "03  收藏与软装 → 全套方案册"
+        },
+        {
+          "kind": "body",
+          "text": "04  陪您落地 → 远程对接施工，必要时到京指导"
+        },
+        {
+          "kind": "caption",
+          "text": "每一步您确认了，再走下一步。"
+        }
+      ]
+    },
+    {
+      "node": "09 结语",
+      "layout": "full",
+      "image": "assets/courtyard.jpg",
+      "duration": 7,
+      "move": "out",
+      "text": [
+        {
+          "kind": "subtitle",
+          "text": "不做样板房，只做一个别人复制不了的家。"
+        },
+        {
+          "kind": "body",
+          "text": "春看庭院新绿，冬围炉火茶香。"
+        },
+        {
+          "kind": "caption",
+          "text": "Katie Xiong｜Archilux Living"
+        }
+      ]
+    }
+  ]
+}
