@@ -23,3 +23,6 @@ build/
 projects/*/assets/
 projects/*/gen/
 projects/*/build/
+
+# 客户文件：隐私，不进 git
+clients/
